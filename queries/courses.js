@@ -1,3 +1,4 @@
+import { replaceMongoIdInArray } from "@/lib/convertData";
 import { Category } from "@/model/category";
 import { Module } from "@/model/module";
 import { Testimonial } from "@/model/testimonial";
@@ -5,8 +6,8 @@ import { User } from "@/model/user";
 
 const { Course } = require("@/model/course");
 
-export async function getCourses() {
-  const courses = await Course.find({})
+export async function getCourseList() {
+  const result = await Course.find({})
     .populate({
       path: "category",
       model: Category,
@@ -22,7 +23,8 @@ export async function getCourses() {
     .populate({
       path: "modules",
       model: Module,
-    });
+    })
+    .lean();
 
-  return courses;
+  return replaceMongoIdInArray(result);
 }
