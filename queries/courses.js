@@ -25,6 +25,7 @@ export async function getCourseList() {
       model: Module,
     })
     .lean();
+  console.log(result);
 
   return replaceMongoIdInArray(result);
 }
