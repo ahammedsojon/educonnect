@@ -1,22 +1,22 @@
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+"use client";
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Filter } from "lucide-react";
+import { useState } from "react";
 const CATEGORY_OPTIONS = [
   {
     id: 1,
@@ -64,7 +64,29 @@ const PRICE_OPTIONS = [
   { label: "Free", value: "free" },
   { label: "Paid", value: "paid" },
 ];
-const FilterMenuMobile = ({ filter, applyArrayFilter }) => {
+const FilterMenuMobile = () => {
+  const [filter, setFilter] = useState({
+    categories: ["development"],
+    price: ["free"],
+    sort: "",
+  });
+
+  //   apply checkbox filter
+  const applyArrayFilter = ({ type, value }) => {
+    const isFilterApplied = filter[type].includes(value);
+
+    if (isFilterApplied) {
+      setFilter((prev) => ({
+        ...prev,
+        [type]: prev[type].filter((v) => v !== value),
+      }));
+    } else {
+      setFilter((prev) => ({
+        ...prev,
+        [type]: [...prev[type], value],
+      }));
+    }
+  };
   return (
     <Sheet>
       <SheetTrigger>

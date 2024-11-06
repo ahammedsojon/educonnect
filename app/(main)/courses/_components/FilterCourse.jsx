@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Accordion,
   AccordionContent,
@@ -6,6 +8,7 @@ import {
 } from "@/components/ui/accordion";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from "react";
 const CATEGORY_OPTIONS = [
   {
     id: 1,
@@ -54,7 +57,29 @@ const PRICE_OPTIONS = [
   { label: "Paid", value: "paid" },
 ];
 
-const FilterCourse = ({ filter, applyArrayFilter }) => {
+const FilterCourse = () => {
+  const [filter, setFilter] = useState({
+    categories: ["development"],
+    price: ["free"],
+    sort: "",
+  });
+
+  //   apply checkbox filter
+  const applyArrayFilter = ({ type, value }) => {
+    const isFilterApplied = filter[type].includes(value);
+
+    if (isFilterApplied) {
+      setFilter((prev) => ({
+        ...prev,
+        [type]: prev[type].filter((v) => v !== value),
+      }));
+    } else {
+      setFilter((prev) => ({
+        ...prev,
+        [type]: [...prev[type], value],
+      }));
+    }
+  };
   return (
     <Accordion defaultValue={["categories"]} type="multiple">
       {/* Categories filter */}
