@@ -4,5 +4,6 @@ import mongoose from "mongoose";
 
 export async function getTestimonialForCourse(courseId) {
   const testimonials = await Testimonial.find({ course: courseId }).lean();
+
   return replaceMongoIdInArray(testimonials);
 }
