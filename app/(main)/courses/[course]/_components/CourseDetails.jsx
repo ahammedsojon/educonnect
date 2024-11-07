@@ -4,6 +4,7 @@ import formattedTime from "@/lib/formattedTime";
 import CourseOverview from "./CourseOverview";
 import CourseInstructor from "./CourseInstructor";
 import CourseCurriculam from "./CourseCurriculam";
+import Image from "next/image";
 const CourseDetails = ({ course }) => {
   const {
     title,
@@ -28,10 +29,12 @@ const CourseDetails = ({ course }) => {
         {/*  */}
         <div className="flex sm:items-center gap-5 flex-col sm:flex-row sm:gap-6 md:gap-20 mt-6">
           <div className="flex items-center gap-2">
-            <img
+            <Image
               className="w-[40px] h-[40px] rounded-full"
               src={instructor?.profilePicture}
               alt="sumit saha"
+              height={40}
+              width={40}
             />
             <p className="font-bold">
               {instructor?.firstName} {instructor?.lastName}
