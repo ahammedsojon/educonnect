@@ -1,4 +1,7 @@
-import { replaceMongoIdInArray } from "@/lib/convertData";
+import {
+  replaceMongoIdInArray,
+  replaceMongoIdInObject,
+} from "@/lib/convertData";
 import { Category } from "@/model/category";
 import { Module } from "@/model/module";
 import { Testimonial } from "@/model/testimonial";
@@ -25,7 +28,33 @@ export async function getCourseList() {
       model: Module,
     })
     .lean();
-  console.log(result);
 
   return replaceMongoIdInArray(result);
+}
+
+export async function getCourseById(id) {
+  const result = await Course.findById(id)
+    .populate({
+      path: "category",
+      model: Category,
+    })
+    .populate({
+      path: "instructor",
+      model: User,
+    })
+    .populate({
+      path: "testimonials",
+      model: Testimonial,
+      populate: {
+        path: "user",
+        model: User,
+      },
+    })
+    .populate({
+      path: "modules",
+      model: Module,
+    })
+    .lean();
+
+  return replaceMongoIdInObject(result);
 }

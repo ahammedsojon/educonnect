@@ -37,6 +37,10 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  designation: {
+    type: String,
+    required: true,
+  },
 });
 
 export const User = mongoose.models.User ?? mongoose.model("User", userSchema);

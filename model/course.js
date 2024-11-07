@@ -6,7 +6,7 @@ const courseSchema = new Schema(
       type: String,
       required: true,
     },
-    subTitle: {
+    subtitle: {
       type: String,
       required: true,
     },
