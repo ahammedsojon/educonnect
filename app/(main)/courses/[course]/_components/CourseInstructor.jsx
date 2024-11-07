@@ -1,7 +1,16 @@
+import { getCourseDetailsByInstructor } from "@/queries/courses";
 import { MessageSquare, Presentation, Star, UsersRound } from "lucide-react";
 import React from "react";
 
-const CourseInstructor = ({ instructor }) => {
+const CourseInstructor = async ({ instructor }) => {
+  const { courses, enrollments, testimonials } =
+    (await getCourseDetailsByInstructor(instructor._id)) || {};
+  const totalEnrollments = enrollments.flat().length;
+  const totalReviews = testimonials.flat().length;
+  const totalRatings = (
+    testimonials.flat().reduce((acc, review) => acc + review.rating, 0) / 3
+  ).toPrecision(2);
+
   return (
     <div className="bg-gray-50 rounded-md p-8">
       <div className="md:flex md:gap-x-5 mb-8">
@@ -23,19 +32,19 @@ const CourseInstructor = ({ instructor }) => {
             <ul className="list space-y-4">
               <li className="flex items-center space-x-3">
                 <Presentation className="text-gray-600" />
-                <div>10+ Courses</div>
+                <div>{courses?.length} Courses</div>
               </li>
               <li className="flex space-x-3">
                 <UsersRound className="text-gray-600" />
-                <div>2k+ Student Learned</div>
+                <div>{totalEnrollments} Student Learned</div>
               </li>
               <li className="flex space-x-3">
                 <MessageSquare className="text-gray-600" />
-                <div>1500+ Reviews</div>
+                <div>{totalReviews} Reviews</div>
               </li>
               <li className="flex space-x-3">
                 <Star className="text-gray-600" />
-                <div>4.9 Average Rating</div>
+                <div>{totalRatings} Average Rating</div>
               </li>
             </ul>
           </div>
