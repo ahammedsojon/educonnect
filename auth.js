@@ -1,7 +1,44 @@
-const { default: NextAuth } = require("next-auth");
 import bcrypt from "bcryptjs";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { User } from "./model/user";
+import { authConfig } from "./auth.config";
+import NextAuth from "next-auth";
+
+async function refreshAccessToken(token) {
+  try {
+    const url =
+      "https://oauth2.googleapis.com/token?" +
+      new URLSearchParams({
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        grant_type: "refresh_token",
+        refresh_token: token.refreshToken,
+      });
+    const response = await fetch(url, {
+      headers: {
+        Content_Type: "application/x-www-form-urlencoded",
+      },
+      method: "POST",
+    });
+    const refreshedTokens = await response.json();
+    if (!response.ok) {
+      throw refreshedTokens;
+    }
+    return {
+      ...token,
+      accessToken: refreshedTokens?.access_token,
+      refreshToken: refreshedTokens?.refresh_token,
+      accessTokenExpires: (new Date() + refreshedTokens?.expires_in) * 1000,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    };
+  }
+}
 
 export const {
   handlers: { GET, POST },
@@ -9,9 +46,7 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
-  session: {
-    strategy: "jwt",
-  },
+  ...authConfig,
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
@@ -40,5 +75,38 @@ export const {
         }
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
   ],
+  callbacks: {
+    async jwt({ token, account, user }) {
+      if (account && user) {
+        return {
+          accessToken: account?.access_token,
+          refreshToken: account?.refresh_token,
+          accessTokenExpires: (new Date() + account?.expires_in) * 1000,
+          user,
+        };
+      }
+
+      if (new Date() < token.accessTokenExpires) {
+        return token;
+      }
+
+      return refreshAccessToken(token);
+    },
+  },
 });
+
+export const config = {
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+};

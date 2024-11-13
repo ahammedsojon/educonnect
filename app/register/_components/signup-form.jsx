@@ -50,6 +50,7 @@ export function SignupForm({ role }) {
         body: JSON.stringify(newUser),
       });
       response.status === 201 && router.push("/login");
+      console.log("registered successfully!");
     } catch (error) {
       setError(error.message);
     } finally {

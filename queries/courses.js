@@ -9,8 +9,7 @@ import { Testimonial } from "@/model/testimonial";
 import { User } from "@/model/user";
 import { getEnrollmentForCourse } from "./enrollments";
 import { getTestimonialForCourse } from "./testimonials";
-
-const { Course } = require("@/model/course");
+import { Course } from "@/model/course";
 
 export async function getCourseList() {
   const result = await Course.find({})
