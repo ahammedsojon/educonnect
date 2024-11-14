@@ -10,8 +10,9 @@ import { ArrowRightToLine, BookOpen, Link } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { SectionTitle } from "@/components/section-title";
+import EnrollCourse from "@/components/EnrollCourse";
 
-const RelatedCourses = ({ course }) => {
+const RelatedCourses = ({ courses }) => {
   return (
     <section className="">
       <div className="container">
@@ -25,7 +26,7 @@ const RelatedCourses = ({ course }) => {
           <CarouselPrevious />
           <CarouselNext />
           <CarouselContent>
-            {/* {courses.map((course) => (
+            {courses?.map((course) => (
               <CarouselItem
                 key={course.id}
                 className="md:basis-1/2 lg:basis-1/3"
@@ -61,19 +62,13 @@ const RelatedCourses = ({ course }) => {
                           {formatPrice(49)}
                         </p>
 
-                        <Button
-                          variant="ghost"
-                          className="text-xs text-sky-700 h-7 gap-1"
-                        >
-                          Enroll
-                          <ArrowRightToLine className="w-3" />
-                        </Button>
+                        <EnrollCourse course={course} />
                       </div>
                     </div>
                   </div>
                 </Link>
               </CarouselItem>
-            ))} */}
+            ))}
           </CarouselContent>
         </Carousel>
       </div>

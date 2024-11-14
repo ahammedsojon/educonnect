@@ -2,16 +2,16 @@ import mongoose, { Schema } from "mongoose";
 
 const enrollmentSchema = new Schema(
   {
-    enrollmentData: {
+    enrollmentDate: {
       type: Date,
       required: true,
     },
     completionDate: {
       type: Date,
-      required: true,
+      required: false,
     },
     status: {
-      type: Boolean,
+      type: String,
       required: true,
     },
     course: {
@@ -21,6 +21,10 @@ const enrollmentSchema = new Schema(
     student: {
       type: Schema.ObjectId,
       ref: "User",
+    },
+    method: {
+      type: String,
+      required: true,
     },
   },
   {
