@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 import { createCheckoutSession } from "@/app/actions/stripe";

@@ -1,3 +1,5 @@
+"use server";
+
 import { stripe } from "@/lib/stripe";
 import { formatAmountForStripe } from "@/lib/stripeHelper";
 import { headers } from "next/headers";

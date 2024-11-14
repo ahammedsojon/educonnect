@@ -87,26 +87,28 @@ export const {
       },
     }),
   ],
-  callbacks: {
-    async jwt({ token, account, user }) {
-      if (account && user) {
-        return {
-          accessToken: account?.access_token,
-          refreshToken: account?.refresh_token,
-          accessTokenExpires: (new Date() + account?.expires_in) * 1000,
-          user,
-        };
-      }
+  // callbacks: {
+  //   async jwt({ token, account, user }) {
+  //     if (account && user) {
+  //       return {
+  //         accessToken: account?.access_token,
+  //         refreshToken: account?.refresh_token,
+  //         accessTokenExpires: (new Date() + account?.expires_in) * 1000,
+  //         user,
+  //       };
+  //     }
 
-      if (new Date() < token.accessTokenExpires) {
-        return token;
-      }
+  //     if (new Date() < token.accessTokenExpires) {
+  //       return token;
+  //     }
 
-      return refreshAccessToken(token);
-    },
-  },
+  //     return refreshAccessToken(token);
+  //   },
+  //   async session({ session, token }) {
+  //     session.user = token?.user;
+  //     session.accessToken = token?.access_token;
+  //     session.error = token?.error;
+  //     return session;
+  //   },
+  // },
 });
-
-export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
-};
