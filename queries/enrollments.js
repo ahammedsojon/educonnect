@@ -2,10 +2,22 @@ import {
   replaceMongoIdInArray,
   replaceMongoIdInObject,
 } from "@/lib/convertData";
+import { Course } from "@/model/course";
 import { Enrollment } from "@/model/enrollement";
 
 export async function getEnrollmentForCourse(courseId) {
   const enrollements = await Enrollment.find({ course: courseId }).lean();
+
+  return replaceMongoIdInArray(enrollements);
+}
+
+export async function getEnrollmentsForUser(userId) {
+  const enrollements = await Enrollment.find({ student: userId })
+    .populate({
+      path: "course",
+      model: Course,
+    })
+    .lean();
 
   return replaceMongoIdInArray(enrollements);
 }

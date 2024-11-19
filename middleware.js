@@ -5,8 +5,6 @@ import { authConfig } from "./auth.config";
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
-  console.log("hello from middleware!");
-
   const { nextUrl } = req;
   const isAuthenticated = req.auth;
   const isPublicRoute =
