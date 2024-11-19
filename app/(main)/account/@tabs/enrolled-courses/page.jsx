@@ -9,6 +9,7 @@ import Link from "next/link";
 
 async function EnrolledCourses() {
   const loggedInUser = await getLoggedInUser();
+
   const enrollments = await getEnrollmentsForUser(loggedInUser?.id);
 
   return (

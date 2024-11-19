@@ -1,5 +1,4 @@
 "use client";
-import { auth } from "@/auth";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

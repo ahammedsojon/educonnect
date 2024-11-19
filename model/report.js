@@ -17,7 +17,7 @@ const reportSchema = new Schema({
   student: {
     required: true,
     type: Schema.ObjectId,
-    ref: "Student",
+    ref: "User",
   },
   quizAssessment: {
     required: true,

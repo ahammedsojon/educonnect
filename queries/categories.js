@@ -11,7 +11,6 @@ export async function getCategoreis() {
 
 export async function getCategoryById(categoryId) {
   const category = await Category.findById(categoryId).lean();
-  console.log(category);
 
   return replaceMongoIdInObject(category);
 }

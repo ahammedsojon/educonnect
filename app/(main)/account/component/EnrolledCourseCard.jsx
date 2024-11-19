@@ -26,7 +26,6 @@ const EnrolledCourseCard = async ({ enrollment }) => {
   const quizMarks = totalCorrect.length * 5;
   const otherMarks = report?.quizAssessment?.otherMarks;
   const totalMarks = quizMarks + otherMarks;
-  console.log(quizMarks);
 
   return (
     <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">

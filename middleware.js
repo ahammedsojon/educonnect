@@ -12,8 +12,12 @@ export default auth((req) => {
     nextUrl.pathname === ROOT;
 
   if (!isAuthenticated && !isPublicRoute) {
+    console.log(1);
+
     return Response.redirect(new URL(LOGIN, nextUrl));
   }
+
+  console.log(2);
 });
 
 export const config = {
