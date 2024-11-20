@@ -70,6 +70,24 @@ export async function getCourseDetailsByInstructor(instructorId) {
       return enrollment;
     })
   );
+  function groupBy(array, keyFn) {
+    return array.reduce((result, item) => {
+      const key = keyFn(item);
+      if (!result[key]) {
+        result[key] = [];
+      }
+      result[key].push(item);
+      return result;
+    }, {});
+  }
+
+  const groupedByCourse = groupBy(enrollments.flat(), ({ course }) => course);
+
+  const revenue = courses.reduce(
+    (acc, course) => acc + groupedByCourse[course._id].length * course.price,
+    0
+  );
+
   const testimonials = await Promise.all(
     courses.map(async ({ _id }) => {
       const testimonial = await getTestimonialForCourse(_id);
@@ -80,5 +98,6 @@ export async function getCourseDetailsByInstructor(instructorId) {
     courses,
     enrollments,
     testimonials,
+    revenue,
   };
 }
