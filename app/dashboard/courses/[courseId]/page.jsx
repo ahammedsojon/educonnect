@@ -1,22 +1,17 @@
+import AlertBanner from "@/components/alert-banner";
 import { IconBadge } from "@/components/icon-badge";
-import {
-  CircleDollarSign,
-  File,
-  LayoutDashboard,
-  ListChecks,
-} from "lucide-react";
+import { replaceMongoIdInArray } from "@/lib/convertData";
+import { getCategoreis } from "@/queries/categories";
+import { getCourseById } from "@/queries/courses";
+import { CircleDollarSign, LayoutDashboard, ListChecks } from "lucide-react";
 import { CategoryForm } from "./_components/category-form";
+import { CourseActions } from "./_components/course-action";
 import { DescriptionForm } from "./_components/description-form";
 import { ImageForm } from "./_components/image-form";
 import { ModulesForm } from "./_components/module-form";
 import { PriceForm } from "./_components/price-form";
-import { TitleForm } from "./_components/title-form";
-import { CourseActions } from "./_components/course-action";
-import AlertBanner from "@/components/alert-banner";
 import { QuizSetForm } from "./_components/quiz-set-form";
-import { getCourseById } from "@/queries/courses";
-import { getCategoreis } from "@/queries/categories";
-import { replaceMongoIdInArray } from "@/lib/convertData";
+import { TitleForm } from "./_components/title-form";
 
 const EditCourse = async ({ params }) => {
   const { courseId } = await params;
@@ -28,6 +23,7 @@ const EditCourse = async ({ params }) => {
     category: c.id,
   }));
   const course = await getCourseById(courseId);
+  console.log(course);
 
   const mappedModules = replaceMongoIdInArray(course?.modules).sort(
     (a, b) => a.order - b.order
@@ -91,7 +87,12 @@ const EditCourse = async ({ params }) => {
                 <IconBadge icon={CircleDollarSign} />
                 <h2 className="text-xl">Sell you course</h2>
               </div>
-              <PriceForm initialData={{}} courseId={courseId} />
+              <PriceForm
+                initialData={{
+                  price: course?.price,
+                }}
+                courseId={courseId}
+              />
             </div>
           </div>
         </div>

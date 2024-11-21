@@ -11,8 +11,16 @@ import Link from "next/link";
 import { ModuleTitleForm } from "./_components/module-title-form";
 import { LessonForm } from "./_components/lesson-form";
 import { CourseActions } from "../../_components/course-action";
+import { getCourseById } from "@/queries/courses";
+import { getModuleBuildInfo } from "next/dist/build/webpack/loaders/get-module-build-info";
+import { getModuleById } from "@/queries/module";
 
-const Module = async ({ params }) => {
+const Module = async ({ params: { courseId, moduleId } }) => {
+  console.log(courseId, moduleId);
+  const course = await getCourseById(courseId);
+  const moduleData = await getModuleById(moduleId);
+  console.log(moduleData);
+
   return (
     <>
       <AlertBanner
@@ -42,7 +50,13 @@ const Module = async ({ params }) => {
                 <IconBadge icon={LayoutDashboard} />
                 <h2 className="text-xl">Customize Your module</h2>
               </div>
-              <ModuleTitleForm initialData={{}} courseId={1} chapterId={1} />
+              <ModuleTitleForm
+                initialData={{
+                  title: moduleData?.title,
+                }}
+                courseId={courseId}
+                moduleId={moduleId}
+              />
             </div>
             <div>
               <div className="flex items-center gap-x-2">

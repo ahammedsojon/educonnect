@@ -3,13 +3,12 @@ import {
   replaceMongoIdInObject,
 } from "@/lib/convertData";
 import { Category } from "@/model/category";
-import { Enrollment } from "@/model/enrollement";
+import { Course } from "@/model/course";
 import { Module } from "@/model/module";
 import { Testimonial } from "@/model/testimonial";
 import { User } from "@/model/user";
 import { getEnrollmentForCourse } from "./enrollments";
 import { getTestimonialForCourse } from "./testimonials";
-import { Course } from "@/model/course";
 
 export async function getCourseList() {
   const result = await Course.find({})
@@ -61,7 +60,7 @@ export async function getCourseById(id) {
   return replaceMongoIdInObject(JSON.parse(JSON.stringify(result)));
 }
 
-export async function getCourseDetailsByInstructor(instructorId) {
+export async function getCourseDetailsByInstructor(instructorId, expand) {
   let publishedCourses = await Course.find({
     instructor: instructorId,
     active: true,
@@ -85,13 +84,13 @@ export async function getCourseDetailsByInstructor(instructorId) {
   }
 
   const groupedByCourse = groupBy(enrollments.flat(), ({ course }) => course);
-  console.log(publishedCourses);
-  console.log(groupedByCourse);
 
-  const revenue = publishedCourses.reduce(
-    (acc, course) => acc + groupedByCourse[course._id].length * course.price,
-    0
-  );
+  const revenue = publishedCourses.reduce((acc, course) => {
+    const quantity = groupedByCourse[course._id]
+      ? groupedByCourse[course._id].length
+      : 0;
+    return acc + quantity * course.price;
+  }, 0);
 
   const testimonials = await Promise.all(
     publishedCourses.map(async ({ _id }) => {
@@ -99,6 +98,15 @@ export async function getCourseDetailsByInstructor(instructorId) {
       return testimonial;
     })
   );
+  if (expand) {
+    const courses = await Course.find({ instructor: instructorId });
+    return {
+      courses,
+      enrollments,
+      testimonials,
+      revenue,
+    };
+  }
   return {
     courses: publishedCourses,
     enrollments,

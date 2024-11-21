@@ -1,6 +1,6 @@
 "use server";
 
-import { create, reorder } from "@/queries/module";
+import { create, reorder, update } from "@/queries/module";
 
 export async function createModule(formData) {
   try {
@@ -10,6 +10,15 @@ export async function createModule(formData) {
     throw new Error(error);
   }
 }
+
+export const updateModule = async (moduleId, formData) => {
+  try {
+    const result = await update(moduleId, formData);
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 
 export async function reorderModules(data) {
   try {

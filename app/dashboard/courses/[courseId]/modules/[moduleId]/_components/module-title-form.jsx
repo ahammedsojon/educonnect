@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { updateModule } from "@/app/actions/module";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -22,7 +23,7 @@ const formSchema = z.object({
   title: z.string().min(1),
 });
 
-export const ModuleTitleForm = ({ initialData, courseId, chapterId }) => {
+export const ModuleTitleForm = ({ initialData, courseId, moduleId }) => {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
 
@@ -37,6 +38,7 @@ export const ModuleTitleForm = ({ initialData, courseId, chapterId }) => {
 
   const onSubmit = async (values) => {
     try {
+      await updateModule(moduleId, values);
       toast.success("Module title updated");
       toggleEdit();
       router.refresh();
@@ -60,7 +62,7 @@ export const ModuleTitleForm = ({ initialData, courseId, chapterId }) => {
           )}
         </Button>
       </div>
-      {!isEditing && <p className="text-sm mt-2">{"Reactive Accelerator"}</p>}
+      {!isEditing && <p className="text-sm mt-2">{initialData?.title}</p>}
       {isEditing && (
         <Form {...form}>
           <form

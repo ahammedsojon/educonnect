@@ -1,3 +1,4 @@
+import { replaceMongoIdInObject } from "@/lib/convertData";
 import { Course } from "@/model/course";
 import { Module } from "@/model/module";
 
@@ -15,6 +16,24 @@ export async function create(formData) {
     return JSON.parse(JSON.stringify(createdModule));
   } catch (error) {
     console.log(error.message);
+  }
+}
+
+export async function getModuleById(id) {
+  try {
+    const result = await Module.findById(id).lean();
+    return replaceMongoIdInObject(result);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+export async function update(moduleId, data) {
+  try {
+    const result = await Module.findByIdAndUpdate(moduleId, data);
+    return JSON.parse(JSON.stringify(result));
+  } catch (error) {
+    throw new Error(error);
   }
 }
 
