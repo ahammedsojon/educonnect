@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { createCourse } from "@/app/actions/course";
 const formSchema = z.object({
   title: z.string().min(1, {
     message: "Title is required!",
@@ -46,24 +47,23 @@ const AddCourse = () => {
   });
 
   const { isSubmitting, isValid } = form.formState;
+  const { handleSubmit } = form;
 
   const onSubmit = async (values) => {
     try {
-      router.push(`/dashboard/courses/${1}`);
-      toast.success("Course created");
+      const result = await createCourse(values);
+      router.push(`/dashboard/courses/${result.id}`);
+      toast.success("Course has been created successfully.");
     } catch (error) {
+      console.log(error.message);
       toast.error("Something went wrong");
     }
-    console.log(values);
   };
   return (
     <div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
       <div className="max-w-full w-[536px]">
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 mt-8"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 mt-8">
             {/* title */}
             <FormField
               control={form.control}
@@ -109,7 +109,7 @@ const AddCourse = () => {
                   Cancel
                 </Button>
               </Link>
-              <Button type="submit" disabled={!isValid || isSubmitting}>
+              <Button type="submit" disabled={isSubmitting}>
                 Continue
               </Button>
             </div>

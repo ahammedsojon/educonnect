@@ -8,22 +8,21 @@ const courseSchema = new Schema(
     },
     subtitle: {
       type: String,
-      required: true,
     },
     description: {
       type: String,
-      required: true,
     },
     thumbnail: {
       type: String,
-      required: true,
     },
     price: {
       type: Number,
+      default: 0,
       required: true,
     },
     active: {
       type: Boolean,
+      default: false,
       required: true,
     },
     category: {
@@ -42,7 +41,6 @@ const courseSchema = new Schema(
     },
     quizzes: {
       type: Schema.ObjectId,
-      required: true,
     },
     testimonials: [
       {

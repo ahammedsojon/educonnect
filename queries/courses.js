@@ -62,10 +62,13 @@ export async function getCourseById(id) {
 }
 
 export async function getCourseDetailsByInstructor(instructorId) {
-  let courses = await Course.find({ instructor: instructorId }).lean();
+  let publishedCourses = await Course.find({
+    instructor: instructorId,
+    active: true,
+  }).lean();
 
   const enrollments = await Promise.all(
-    courses.map(async ({ _id }) => {
+    publishedCourses.map(async ({ _id }) => {
       const enrollment = await getEnrollmentForCourse(_id);
       return enrollment;
     })
@@ -82,22 +85,42 @@ export async function getCourseDetailsByInstructor(instructorId) {
   }
 
   const groupedByCourse = groupBy(enrollments.flat(), ({ course }) => course);
+  console.log(publishedCourses);
+  console.log(groupedByCourse);
 
-  const revenue = courses.reduce(
+  const revenue = publishedCourses.reduce(
     (acc, course) => acc + groupedByCourse[course._id].length * course.price,
     0
   );
 
   const testimonials = await Promise.all(
-    courses.map(async ({ _id }) => {
+    publishedCourses.map(async ({ _id }) => {
       const testimonial = await getTestimonialForCourse(_id);
       return testimonial;
     })
   );
   return {
-    courses,
+    courses: publishedCourses,
     enrollments,
     testimonials,
     revenue,
   };
+}
+
+export async function create(courseData) {
+  try {
+    const result = await Course.create(courseData);
+    return JSON.parse(JSON.stringify(result));
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function update(courseId, courseData) {
+  try {
+    const course = await Course.findByIdAndUpdate(courseId, courseData);
+    return JSON.parse(JSON.stringify(course));
+  } catch (error) {
+    throw new Error(error);
+  }
 }

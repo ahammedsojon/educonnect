@@ -17,6 +17,8 @@ import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { updateCourse } from "@/app/actions/course";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -39,9 +41,9 @@ export const TitleForm = ({ initialData = {}, courseId }) => {
 
   const onSubmit = async (values) => {
     try {
-      //   await axios.patch(`/api/courses/${courseId}`, values);
-
+      await updateCourse(courseId, values);
       toggleEdit();
+      toast.success("Course has been updated successfully.");
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong");
@@ -63,7 +65,7 @@ export const TitleForm = ({ initialData = {}, courseId }) => {
           )}
         </Button>
       </div>
-      {!isEditing && <p className="text-sm mt-2">{initialData.title}</p>}
+      {!isEditing && <p className="text-sm mt-2">{initialData?.title}</p>}
       {isEditing && (
         <Form {...form}>
           <form
