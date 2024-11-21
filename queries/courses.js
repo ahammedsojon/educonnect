@@ -58,7 +58,7 @@ export async function getCourseById(id) {
     })
     .lean();
 
-  return replaceMongoIdInObject(result);
+  return replaceMongoIdInObject(JSON.parse(JSON.stringify(result)));
 }
 
 export async function getCourseDetailsByInstructor(instructorId) {
